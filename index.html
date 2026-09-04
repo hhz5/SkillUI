@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Guard against environments, extensions, or sandboxes where window.fetch has only a getter
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var activeFetch = originalFetch;
+
+          function defineFetchOn(target) {
+            if (!target) return false;
+            try {
+              Object.defineProperty(target, 'fetch', {
+                get: function() {
+                  return activeFetch || originalFetch;
+                },
+                set: function(fn) {
+                  activeFetch = fn;
+                },
+                configurable: true,
+                enumerable: true
+              });
+              return true;
+            } catch (err) {
+              return false;
+            }
+          }
+
+          // 1. Walk prototype chain of window and redefine fetch with getter + setter
+          var obj = window;
+          while (obj) {
+            try {
+              var desc = Object.getOwnPropertyDescriptor(obj, 'fetch');
+              if (desc) {
+                defineFetchOn(obj);
+              }
+            } catch (e) {}
+            obj = Object.getPrototypeOf(obj);
+          }
+
+          // 2. Define on Window.prototype explicitly
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            defineFetchOn(Window.prototype);
+          }
+
+          // 3. Define on window directly
+          defineFetchOn(window);
+
+          // 4. Define on globalThis if distinct
+          if (typeof globalThis !== 'undefined' && globalThis !== window) {
+            defineFetchOn(globalThis);
+          }
+        } catch (e) {}
+
+        // Global unhandled error guard for environments where window.fetch was made non-configurable with only a getter
+        window.addEventListener('error', function(event) {
+          if (event && event.message && typeof event.message === 'string' && event.message.indexOf('fetch') !== -1 && event.message.indexOf('getter') !== -1) {
+            event.preventDefault();
+            if (typeof event.stopImmediatePropagation === 'function') {
+              event.stopImmediatePropagation();
+            }
+            return true;
+          }
+        }, true);
+      })();
+    </script>
+    <title>SkillUI - Skill 转 可视化应用生成器</title>
+    <meta name="description" content="上传或输入任何 Skill 规则，自动生成专属可视化 UI 表单与交互应用，支持智能解析、字段定制与多模执行。" />
+    <meta property="og:title" content="SkillUI - Skill 转 可视化应用生成器" />
+    <meta property="og:description" content="上传或输入任何 Skill 规则，自动生成专属可视化 UI 表单与交互应用，支持智能解析、字段定制与多模执行。" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased font-sans selection:bg-indigo-500 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

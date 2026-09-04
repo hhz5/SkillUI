@@ -1,0 +1,6 @@
+{
+  "name": "SkillUI - Skill 转 可视化应用生成器",
+  "description": "上传或输入任何 Skill 规则，自动生成专属可视化 UI 表单与交互应用，支持智能解析、字段定制与多模执行。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
