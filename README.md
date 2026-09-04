@@ -181,75 +181,12 @@ npm run dev
 npm run build
 ```
 
----
 
-## 📝 Skill 规则定义与 Schema 规范
-
-SkillUI 支持标准的 Markdown + YAML Frontmatter 格式。以下是一个完整的 Skill 定义范例：
-
-```markdown
----
-name: Yingzao · 营造 (东方古建学术海报)
-description: 将现场实拍古建构件摄影转为学术级出版物海报
-category: design
-tags: [东方美学, 古建筑, 图文咬合, 测绘出版]
-icon: Image
-enginePreference: gemini
-uiSchema:
-  fields:
-    - name: photo
-      label: 实拍构件照片素材
-      type: file
-      required: true
-      accept: "image/*"
-      placeholder: 点击或拖拽上传建筑构件实拍图片
-    - name: subject_name
-      label: 构件或建筑名称
-      type: text
-      required: true
-      defaultValue: 佛光寺东大殿 · 七铺作双杪三下昂
-    - name: aspect_ratio
-      label: 海报画幅比例
-      type: select
-      defaultValue: "3:4"
-      options:
-        - label: 竖版 3:4 (标准学术海报)
-          value: "3:4"
-        - label: 方形 1:1 (社交媒体正方形)
-          value: "1:1"
-        - label: 移动端 9:16 (手机全屏竖屏)
-          value: "9:16"
-    - name: depth_level
-      label: 文字解析详尽度
-      type: slider
-      min: 1
-      max: 5
-      step: 1
-      defaultValue: 4
-  outputConfig:
-    renderType: poster
-    title: 营造 · 东方建筑学术海报
-    enableExportImage: true
----
-
-你是一位精通中国古代建筑史与测绘营造的学术专家兼出版级平面设计师。
-根据用户提供的构件名称 {{subject_name}}、解析深度级别 {{depth_level}} 及素材图像，
-请输出包含以下结构的专业分析，并配合图文咬合设计排版：
-
-1. **构件历史背景与年代定性**
-2. **结构尺度与营造法式铺作分析**
-3. **关键力学与榫卯节点构造特征**
-```
-
----
-
-## 🛠️ 内置精选技能 (Curated Built-in Skills)
+## 🛠️ 内置demo技能 (Curated Built-in Skills)
 
 | 图标 | 技能名称 | 分类 | 控件特色 | 呈现形式 |
 |:---:|:---|:---|:---|:---|
-| 🏛️ | **Yingzao · 营造海报引擎** | 视觉设计 | 图片拖拽上传 / 画幅比例 / 深度滑块 | 视网膜级 2.5× 图文咬合学术海报 |
 | 💻 | **代码审查与重构大师** | 代码研发 | 等宽代码编辑器 / 严格度滑块 / 优化开关 | GFM Markdown + 语法高亮差异 |
-| 📱 | **小红书多图卡片生成器** | 内容写作 | 长文本输入 / 风格选择 / 卡片数量滑块 | 多卡片轮播图文幻灯片 |
 | 📊 | **SQL 查询生成与优化器** | 生产力 | 数据库方言下拉 / 表结构录入 / 执行计划分析 | 标准 SQL 代码块 + 执行解释 |
 | 🎨 | **调色板与设计系统引擎** | 视觉设计 | 主题输入 / 色板数量滑块 / WCAG 校验开关 | 交互式色块网格 + 对比度分析 |
 | 📑 | **会议纪要与行动项提炼器**| 生产力 | 录音转录文本 / 优先度过滤 / 责任人提取 | 结构化待办清单 + 导出表格 |
@@ -288,17 +225,6 @@ skillui/
 └── README.md
 ```
 
----
-
-## 🗺️ 路线图 (Roadmap)
-
-- [x] **v2.0**: 纯前端 Local-First 架构落地，支持 10 种控件族动态渲染
-- [x] **v2.2**: 引入 `html-to-image` 2.5× 高清海报与小红书多图轮播渲染器
-- [x] **v2.4**: 补齐 GitHub 仓库递归直连导入与全量工程 PRD/架构文档中心
-- [ ] **v2.5**: 支持自定义 CSS 布局模版注入与拖拽式仪表盘布局
-- [ ] **v2.6**: 支持 WebAssembly 驱动的本地离线小模型（如 WebLLM / Gemma 2B）端侧推理
-
----
 
 ## 🤝 参与贡献 (Contributing)
 
