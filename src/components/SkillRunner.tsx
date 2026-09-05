@@ -35,6 +35,7 @@ import { SkillFileExplorer } from './SkillFileExplorer';
 import { SkillPosterResult } from './SkillPosterResult';
 import { SkillSocialCardsResult } from './SkillSocialCardsResult';
 import { SkillWebDeckResult } from './SkillWebDeckResult';
+import { SkillHtmlLiveResult } from './SkillHtmlLiveResult';
 import { FileUploadField } from './FileUploadField';
 import { SmartContentField } from './SmartContentField';
 import { TagsField } from './TagsField';
@@ -167,6 +168,7 @@ export const SkillRunner: React.FC<SkillRunnerProps> = ({
             inputValues: formValues,
             fields: skill.uiSchema.fields,
             modelConfig: skill.modelConfig,
+            skillRecord: skill,
           }),
         });
 
@@ -1041,30 +1043,28 @@ export const SkillRunner: React.FC<SkillRunnerProps> = ({
                 </div>
               </div>
             ) : outputResult ? (
-              skill.uiSchema?.outputConfig?.renderType === 'web-deck' ||
-              skill.uiSchema?.outputConfig?.renderType === 'presentation' ||
-              skill.title.toLowerCase().includes('ppt') ||
-              skill.title.toLowerCase().includes('deck') ||
-              skill.title.includes('演示文稿') ||
-              skill.title.includes('幻灯片') ? (
+              skill.uiSchema?.outputConfig?.renderType === 'html' ||
+              skill.uiSchema?.outputConfig?.renderType === 'web-preview' ||
+              (outputResult.includes('```html') && !skill.uiSchema?.outputConfig?.renderType?.includes('deck') && !skill.uiSchema?.outputConfig?.renderType?.includes('social')) ? (
+                <SkillHtmlLiveResult
+                  rawOutput={outputResult}
+                  formValues={formValues}
+                  title={skill.title}
+                />
+              ) : skill.uiSchema?.outputConfig?.renderType === 'web-deck' ||
+              skill.uiSchema?.outputConfig?.renderType === 'presentation' ? (
                 <SkillWebDeckResult
                   rawOutput={outputResult}
                   formValues={formValues}
                   title={skill.title}
                 />
-              ) : skill.uiSchema?.outputConfig?.renderType === 'social-cards' ||
-              skill.title.includes('社交卡片') ||
-              skill.title.includes('Social Card') ||
-              skill.title.includes('小红书') ||
-              (skill.title.includes('Guizang') && !skill.title.toLowerCase().includes('ppt')) ? (
+              ) : skill.uiSchema?.outputConfig?.renderType === 'social-cards' ? (
                 <SkillSocialCardsResult
                   rawOutput={outputResult}
                   formValues={formValues}
                   title={skill.title}
                 />
-              ) : skill.uiSchema?.outputConfig?.renderType === 'poster' ||
-              skill.title.includes('营造') ||
-              (skill.title.includes('海报') && !skill.title.includes('卡片')) ? (
+              ) : skill.uiSchema?.outputConfig?.renderType === 'poster' ? (
                 <SkillPosterResult
                   rawOutput={outputResult}
                   formValues={formValues}

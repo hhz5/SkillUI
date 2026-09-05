@@ -959,4 +959,112 @@ description: Web 原生瑞士排版与杂志风 PPT 演示文稿生成
       media_assets: [],
     },
   },
+  {
+    id: 'skill-brand-style-ui',
+    title: '品牌设计系统与 Web/iOS 界面生成工坊',
+    description: '选择品牌视觉语言 (Stripe, Linear, Apple, 飞书, 国色风雅)，一键生成生产级 HTML/Tailwind 页面与 iOS 原型，并在实时沙箱中多端交互。',
+    icon: 'PenTool',
+    category: 'design',
+    tags: ['Web界面', 'UI组件', '品牌风格', 'HTML沙箱', 'iOS原型'],
+    rawSource: {
+      type: 'text',
+      content: `---
+name: brand-style-ui
+description: 品牌设计系统与 Web/iOS 界面 HTML 实时生成
+---
+# Role: Principal UI/UX Architect & Design Systems Lead
+根据指定的顶尖品牌设计语言（如 Stripe 极简科技渐变、Linear 先锋暗黑、Apple 晶莹质感、飞书高效商务、中国传统国色），将业务需求与文案转化为高质量、现代高保真的单文件 HTML 网页界面或 iOS App 原型。`,
+    },
+    systemInstruction: `你是一位顶尖的 UI/UX 架构师与设计系统负责人。
+你的任务是将用户的业务文案、功能卖点与需求，结合所选的品牌视觉设计规范，输出一段结构完整、美观现代且可直接在浏览器沙箱中完美呈现的单文件 HTML 代码（必须使用 \`\`\`html ... \`\`\` 代码块包裹）。
+
+交付要求：
+1. 采用 Tailwind CSS 工具类、Plus Jakarta Sans / Inter 字体排版与 FontAwesome 图标。
+2. 构建清晰的信息层级：包含 Brand Navigation、强视觉冲力的 Hero 核心转化区、特性卡片组、数据指标卡与 Call-to-Action 行动区。
+3. 在 \`\`\`html 代码块之后，提供简明扼要的【视觉设计系统规范】与【色彩及排版说明】。`,
+    uiSchema: {
+      title: '品牌风格与 Web/iOS 界面工作台',
+      subtitle: '选择品牌设计语言与界面形态，输入业务文案，一键生成生产级 HTML 代码并在沙箱中实时交互',
+      fields: [
+        {
+          id: 'brand_style',
+          name: '品牌设计语言',
+          label: '品牌视觉风格体系 (Brand Style)',
+          type: 'select',
+          defaultValue: 'stripe_minimal',
+          required: true,
+          options: [
+            { label: 'Stripe 现代科技 (优雅网格渐变 / 极简排版 / 微投影)', value: 'stripe_minimal' },
+            { label: 'Linear 先锋暗黑 (Cyber Dark / 精准边框高光 / 快捷指示)', value: 'linear_dark' },
+            { label: 'Apple 极致纯粹 (精致磨砂玻璃 / 严谨留白 / SF Pro 排版)', value: 'apple_refined' },
+            { label: '飞书/字节高效商务 (高信息密度 / 协同模块 / 亲和力蓝彩)', value: 'feishu_business' },
+            { label: '中国传统国色风雅 (矿物朱砂 / 黛蓝 / 东方典雅意境)', value: 'chinese_tradition' },
+            { label: 'Tailwind 现代 SaaS (高转化 Hero / 特性矩阵 / 交互卡片)', value: 'tailwind_saas' },
+            { label: 'iOS 18 拟态质感 (圆润大倒角 / 触觉反馈卡片 / 紧凑列表)', value: 'ios_native' },
+          ],
+          description: 'AI 将严格根据所选品牌的调色板、圆角率、边框与排版节奏组织界面',
+        },
+        {
+          id: 'target_ui_type',
+          name: '交付界面形态',
+          label: '界面形态规格 (UI Type)',
+          type: 'select',
+          defaultValue: 'web_landing',
+          required: true,
+          options: [
+            { label: 'Web 响应式 Landing Page 落地页 (Hero 头部 + 核心亮点卡片 + CTA 转化区)', value: 'web_landing' },
+            { label: 'iOS App 移动端单屏界面 (iPhone 390px 尺寸, 状态栏 + 卡片列表 + 底部操作栏)', value: 'ios_screen' },
+            { label: '设计系统组件规范卡 (包含调色板色卡 + 按钮状态 + 卡片变体 + 字体阶梯)', value: 'design_system_cards' },
+            { label: '交互式业务分析仪表盘 (Dashboard - 统计指标 + 图表卡片 + 动态列表)', value: 'analytics_dashboard' },
+          ],
+          description: '决定生成的 HTML 结构、画布比例与容器响应式断点',
+        },
+        {
+          id: 'source_content',
+          name: '界面文案与需求材料',
+          label: '上传需求文档 / 业务文案附件 或 粘贴内容',
+          type: 'file',
+          accept: '.md,.txt,.pdf,.docx,.json,image/*',
+          multiple: true,
+          uploadPreset: 'document',
+          placeholder: '在此粘贴或输入需要呈现在界面上的产品名称、核心卖点、功能描述、数据指标，或直接上传文档附件...',
+          defaultValue: `SkillUI 智能技能工作台：一键将 Markdown 与 API 规则转化为极致体验的生产力工具。\n\n核心亮点：\n1. 零配置自动装配界面：从 Skill 规则自动反射表单与结果卡片\n2. 瑞士国际主义高质感排版：克莱因蓝与高密度事实设计\n3. 本地优先安全架构：零后端数据库依赖，数据 100% 保存在用户本地浏览器`,
+          required: true,
+          description: '支持上传文档附件，AI 自动提取事实文案并融合进生成的界面中',
+        },
+        {
+          id: 'theme_color',
+          name: '主题主色系',
+          label: '品牌主色调 (Primary Accent)',
+          type: 'select',
+          defaultValue: 'indigo_modern',
+          options: [
+            { label: '极光紫蓝 (Indigo Modern #6366F1)', value: 'indigo_modern' },
+            { label: '克莱因蓝 (IKB Blue #002FA7)', value: 'ikb_blue' },
+            { label: '荧光柠檬黄 (Lemon Yellow #D6FF00)', value: 'lemon_yellow' },
+            { label: '翡翠深绿 (Emerald #10B981)', value: 'emerald' },
+            { label: '朱砂赤红 (Vermilion #AC3C33)', value: 'vermilion' },
+            { label: '极简纯黑白 (Monochrome Noir #09090B)', value: 'monochrome' },
+          ],
+        },
+      ],
+      outputConfig: {
+        renderType: 'html',
+        suggestedActions: ['download', 'fullscreen', 'copy', 'rerun'],
+        customLayout: 'split',
+      },
+    },
+    enginePreference: 'gemini',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isFavorite: true,
+    isBuiltIn: true,
+    runCount: 41,
+    sampleInputs: {
+      brand_style: 'stripe_minimal',
+      target_ui_type: 'web_landing',
+      source_content: `SkillUI 智能技能工作台：一键将 Markdown 与 API 规则转化为极致体验的生产力工具。\n\n核心亮点：\n1. 零配置自动装配界面：从 Skill 规则自动反射表单与结果卡片\n2. 瑞士国际主义高质感排版：克莱因蓝与高密度事实设计\n3. 本地优先安全架构：零后端数据库依赖，数据 100% 保存在用户本地浏览器`,
+      theme_color: 'indigo_modern',
+    },
+  },
 ];

@@ -51,7 +51,9 @@ export interface OutputConfig {
     | 'image'
     | 'social-cards'
     | 'web-deck'
-    | 'presentation';
+    | 'presentation'
+    | 'html'
+    | 'web-preview';
   suggestedActions: ('copy' | 'download' | 'share' | 'fullscreen' | 'rerun' | 'compare')[];
   customLayout?: 'single' | 'split' | 'tabs';
   posterConfig?: {

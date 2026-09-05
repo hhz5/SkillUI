@@ -517,25 +517,21 @@ function heuristicParseSkill(content: string, sourceName?: string, files: any[] 
 
   // 1. Check if this is a Social Card / Carousel / Xiaohongshu / Cover Skill (e.g. guizang-social-card-skill)
   const isSocialCardSkill =
-    contentLower.includes("social-card") ||
-    contentLower.includes("social card") ||
-    contentLower.includes("guizang") ||
-    contentLower.includes("小红书") ||
-    contentLower.includes("rednote") ||
-    contentLower.includes("轮播") ||
-    contentLower.includes("carousel") ||
-    contentLower.includes("实况照片") ||
-    contentLower.includes("live photo") ||
-    contentLower.includes("微信公众号封面") ||
-    contentLower.includes("wechat cover") ||
-    filePaths.includes("social-card") ||
-    filePaths.includes("category-cookbook") ||
-    filePaths.includes("live-photo-production") ||
-    filePaths.includes("layout-recipes") ||
-    filePaths.includes("swiss-style") ||
-    filePaths.includes("editorial-style") ||
-    srcNameLower.includes("social-card") ||
-    srcNameLower.includes("guizang");
+    (contentLower.includes("social-card") ||
+      contentLower.includes("social card") ||
+      contentLower.includes("小红书轮播") ||
+      contentLower.includes("小红书图文") ||
+      contentLower.includes("微信公众号封面") ||
+      contentLower.includes("实况动效卡") ||
+      filePaths.includes("social-card") ||
+      filePaths.includes("category-cookbook") ||
+      filePaths.includes("live-photo-production") ||
+      srcNameLower.includes("social-card")) &&
+    !contentLower.includes("brand-style") &&
+    !contentLower.includes("web-ui") &&
+    !contentLower.includes("html-snippet") &&
+    !contentLower.includes("网页设计") &&
+    !contentLower.includes("ios app");
 
   if (isSocialCardSkill) {
     return {
@@ -682,6 +678,113 @@ function heuristicParseSkill(content: string, sourceName?: string, files: any[] 
             defaultTheme: "ikb_blue",
             pageCount: 4,
           },
+        },
+      },
+    };
+  }
+
+  // 1.5 Check if this is a Brand Design / Web UI / HTML Snippet / iOS App Generation Skill
+  const isWebUiOrHtmlSkill =
+    contentLower.includes("brand-style") ||
+    contentLower.includes("web-ui") ||
+    contentLower.includes("html-snippet") ||
+    contentLower.includes("品牌风格设计") ||
+    contentLower.includes("web 页面") ||
+    contentLower.includes("web页面") ||
+    contentLower.includes("网页设计") ||
+    contentLower.includes("ios app 界面") ||
+    contentLower.includes("ios app") ||
+    contentLower.includes("设计系统参考") ||
+    contentLower.includes("html 片段") ||
+    contentLower.includes("html片段") ||
+    contentLower.includes("ui 设计") ||
+    contentLower.includes("landing page") ||
+    srcNameLower.includes("brand") ||
+    srcNameLower.includes("web-ui") ||
+    srcNameLower.includes("html");
+
+  if (isWebUiOrHtmlSkill) {
+    return {
+      title: extractedTitle || "品牌风格设计参考与 Web/iOS 界面生成工坊",
+      description:
+        extractedDesc ||
+        "根据指定品牌风格 (如 Stripe, Linear, 飞书, 小米, Apple) 或中国传统色，自动生成高质量 Web 页面、iOS App 界面或设计系统参考的 HTML 片段，并适配您的文案内容。",
+      icon: "PenTool",
+      category: "design",
+      tags: ["Web设计", "UI组件", "品牌风格", "HTML", "iOS界面"],
+      systemInstruction: content,
+      detectedEndpoints: [],
+      hasExternalEndpoints: false,
+      uiSchema: {
+        title: "品牌风格与 Web/iOS 界面生成工作台",
+        subtitle: "选择品牌设计语言与界面形态，输入业务文案，一键生成生产级 HTML 代码并在沙箱中实时交互",
+        fields: [
+          {
+            id: "brand_style",
+            name: "品牌与设计风格",
+            label: "品牌视觉设计语言 (Brand Style)",
+            type: "select",
+            defaultValue: "stripe_minimal",
+            required: true,
+            options: [
+              { label: "Stripe 现代科技 (优雅网格渐变 / 极简排版 / 微投影)", value: "stripe_minimal" },
+              { label: "Linear 先锋暗黑 (Cyber Dark / 精准边框高光 / 键盘快捷指示)", value: "linear_dark" },
+              { label: "Apple 极致纯粹 (精致磨砂玻璃 / 严谨留白 / SF Pro 字体排版)", value: "apple_refined" },
+              { label: "飞书/字节高效商务 (高信息密度 / 协同模块 / 亲和力蓝彩)", value: "feishu_business" },
+              { label: "中国传统国色风雅 (矿物朱砂 / 黛蓝 / 东方典雅意境)", value: "chinese_tradition" },
+              { label: "Tailwind 现代 SaaS (高转化 Hero / 特性矩阵 / 交互卡片)", value: "tailwind_saas" },
+              { label: "iOS 18 拟态质感 (圆润大倒角 / 触觉反馈卡片 / 紧凑列表)", value: "ios_native" },
+            ],
+            description: "AI 将严格根据所选品牌的调色板、圆角率、边框与排版节奏组织界面",
+          },
+          {
+            id: "target_ui_type",
+            name: "交付界面形态",
+            label: "界面形态规格 (UI Type)",
+            type: "select",
+            defaultValue: "web_landing",
+            required: true,
+            options: [
+              { label: "Web 响应式 Landing Page 落地页 (包含 Hero 头部 + 核心亮点卡片 + CTA 转化区)", value: "web_landing" },
+              { label: "iOS App 移动端单屏界面 (iPhone 390px 尺寸, 顶部状态栏 + 卡片列表 + 底部操作栏)", value: "ios_screen" },
+              { label: "设计系统组件规范卡 (包含调色板色卡 + 按钮状态 + 卡片变体 + 字体阶梯)", value: "design_system_cards" },
+              { label: "交互式业务分析仪表盘 (Dashboard - 统计指标 + 图表卡片 + 动态列表)", value: "analytics_dashboard" },
+            ],
+            description: "决定生成的 HTML 结构、画布比例与容器响应式断点",
+          },
+          {
+            id: "source_content",
+            name: "界面文案与需求材料",
+            label: "上传需求文档 / 业务文案附件 或 粘贴内容",
+            type: "file",
+            accept: ".md,.txt,.pdf,.docx,.json,image/*",
+            multiple: true,
+            uploadPreset: "document",
+            placeholder: "在此粘贴或输入需要呈现在界面上的产品名称、核心卖点、功能描述、数据指标，或直接上传文档附件...",
+            defaultValue: "SkillUI 智能技能工作台：一键将 Markdown 与 API 规则转化为极致体验的生产力工具。\n\n核心亮点：\n1. 零配置自动装配界面\n2. 瑞士国际主义高质感排版\n3. 本地优先安全架构",
+            required: true,
+            description: "支持上传文档附件，AI 自动提取事实文案并融合进生成的界面中",
+          },
+          {
+            id: "theme_color",
+            name: "主题主色系",
+            label: "品牌主色调 (Primary Accent)",
+            type: "select",
+            defaultValue: "indigo_modern",
+            options: [
+              { label: "极光紫蓝 (Indigo Modern #6366F1)", value: "indigo_modern" },
+              { label: "克莱因蓝 (IKB Blue #002FA7)", value: "ikb_blue" },
+              { label: "荧光柠檬黄 (Lemon Yellow #D6FF00)", value: "lemon_yellow" },
+              { label: "翡翠深绿 (Emerald #10B981)", value: "emerald" },
+              { label: "朱砂赤红 (Vermilion #AC3C33)", value: "vermilion" },
+              { label: "极简纯黑白 (Monochrome Noir #09090B)", value: "monochrome" },
+            ],
+          },
+        ],
+        outputConfig: {
+          renderType: "html",
+          suggestedActions: ["download", "fullscreen", "copy", "rerun"],
+          customLayout: "split",
         },
       },
     };
@@ -1046,19 +1149,37 @@ ${content.slice(0, 25000)}
       sourceNameLower.includes("ppt") ||
       sourceNameLower.includes("deck");
 
+    const isWebUi =
+      contentLower.includes("brand-style") ||
+      contentLower.includes("web-ui") ||
+      contentLower.includes("html-snippet") ||
+      contentLower.includes("品牌风格设计") ||
+      contentLower.includes("web 页面") ||
+      contentLower.includes("web页面") ||
+      contentLower.includes("网页设计") ||
+      contentLower.includes("ios app 界面") ||
+      contentLower.includes("ios app") ||
+      contentLower.includes("设计系统参考") ||
+      contentLower.includes("html 片段") ||
+      contentLower.includes("html片段") ||
+      contentLower.includes("ui 设计") ||
+      contentLower.includes("landing page") ||
+      sourceNameLower.includes("brand") ||
+      sourceNameLower.includes("web-ui") ||
+      sourceNameLower.includes("html");
+
     const isSocialCard =
       !isDeck &&
+      !isWebUi &&
       (contentLower.includes("social-card") ||
         contentLower.includes("social card") ||
-        contentLower.includes("guizang") ||
-        contentLower.includes("小红书") ||
+        contentLower.includes("小红书轮播") ||
+        contentLower.includes("小红书图文") ||
+        contentLower.includes("微信公众号封面") ||
         contentLower.includes("category-cookbook") ||
-        contentLower.includes("swiss-style") ||
-        contentLower.includes("editorial-style") ||
         filePaths.includes("social-card") ||
         filePaths.includes("category-cookbook") ||
-        sourceNameLower.includes("social-card") ||
-        sourceNameLower.includes("guizang"));
+        sourceNameLower.includes("social-card"));
 
     if (isDeck) {
       if (!parsedData.uiSchema) parsedData.uiSchema = {};
@@ -1074,6 +1195,12 @@ ${content.slice(0, 25000)}
       }
       parsedData.category = "design";
       parsedData.icon = "Sliders";
+    } else if (isWebUi) {
+      if (!parsedData.uiSchema) parsedData.uiSchema = {};
+      if (!parsedData.uiSchema.outputConfig) parsedData.uiSchema.outputConfig = {};
+      parsedData.uiSchema.outputConfig.renderType = "html";
+      parsedData.category = "design";
+      parsedData.icon = "PenTool";
     } else if (isSocialCard) {
       if (!parsedData.uiSchema) parsedData.uiSchema = {};
       if (!parsedData.uiSchema.outputConfig) parsedData.uiSchema.outputConfig = {};
@@ -1108,7 +1235,7 @@ ${content.slice(0, 25000)}
 // 3. Execute Skill using Gemini AI (SSE Stream for fast, interactive response)
 app.post("/api/skill/execute", async (req, res) => {
   try {
-    const { systemInstruction, inputValues, fields, title, modelConfig } = req.body;
+    const { systemInstruction, inputValues, fields, title, modelConfig, skillRecord } = req.body;
 
     const ai = getGeminiClient();
 
@@ -1367,14 +1494,51 @@ app.post("/api/skill/execute", async (req, res) => {
       }
     }
 
-    // Add overriding directive to prevent confirmation loops, strictly prohibit conversational preambles, and enforce exact page count
-    processedSystemInstruction += `\n\n【最高优先级执行指令与交付规范】：
-1. 【绝对禁止寒暄与开场白】：严禁输出任何“好的”、“当然”、“作为...专家”、“我将严格遵循您的指令”、“收到您的需求”、“根据您的输入”、“这是为您定制的”等任何形式的套话、开头自我介绍或过渡铺垫！你的回答的第一个字符必须直接是第一页/第1张卡片的内容！
-2. 【严禁输出全局方案大纲】：严禁输出类似“社交卡片方案 (共4页)”、“幻灯片大纲”等元方案目录标题！直接从第 1 页开始逐页展开完整的高密度事实内容！
-3. 【严禁确认循环】：用户在前端已完整配置好所有参数并上传所有真实素材。严禁输出任何“确认风格”、“请确认”、“等待回复”、“未检测到输入”等套话！立即输出最终全部内容！`;
+    // Determine skill archetype dynamically for precise generation instructions
+    const skillType = (skillRecord?.uiSchema?.outputConfig?.renderType || "").toLowerCase();
+    const titleLower = (title || "").toLowerCase();
+    const isPptSkill =
+      skillType === "web-deck" ||
+      skillType === "presentation" ||
+      titleLower.includes("ppt") ||
+      titleLower.includes("deck") ||
+      (title || "").includes("演示文稿") ||
+      (title || "").includes("幻灯片");
+    const isSocialSkill =
+      !isPptSkill &&
+      (skillType === "social-cards" ||
+        (title || "").includes("社交卡片") ||
+        (title || "").includes("小红书"));
+    const isPosterSkill =
+      skillType === "poster" ||
+      (title || "").includes("营造") ||
+      ((title || "").includes("海报") && !(title || "").includes("卡片"));
+    const isHtmlOrWebUiSkill =
+      skillType === "html" ||
+      skillType === "web-preview" ||
+      (title || "").includes("Web") ||
+      (title || "").includes("HTML") ||
+      (title || "").includes("品牌风格") ||
+      (title || "").includes("界面生成") ||
+      (title || "").includes("Landing Page");
 
-    if (targetPageCount) {
-      processedSystemInstruction += `\n4. 【严格页面总数约束】：用户指定了页数规格为严格正好 ${targetPageCount} 页！你必须严格且仅生成正好 ${targetPageCount} 页（从第 1 页直到第 ${targetPageCount} 页），绝对不能多于 ${targetPageCount} 页，也绝对不能少于 ${targetPageCount} 页！第 ${targetPageCount} 页必须是收尾总结/复盘页，生成完毕后立即结束，严禁输出更多页面！`;
+    // Add overriding directive to prevent confirmation loops, strictly prohibit conversational preambles
+    processedSystemInstruction += `\n\n【最高优先级执行指令与交付规范】：
+1. 【绝对禁止寒暄与开场白】：严禁输出任何“好的”、“当然”、“作为...专家”、“我将严格遵循您的指令”、“收到您的需求”、“根据您的输入”、“这是为您定制的”等任何形式的套话、开头自我介绍或过渡铺垫！直接输出核心交付内容！
+2. 【严禁确认循环】：用户在前端已完整配置好所有参数并上传所有真实素材。严禁输出任何“确认风格”、“请确认”、“等待回复”、“未检测到输入”等套话！立即输出最终全部内容！`;
+
+    if (isHtmlOrWebUiSkill) {
+      processedSystemInstruction += `\n3. 【Web / UI 界面与 HTML 代码生成规范】：你必须输出一段结构完整、美观现代且可直接在浏览器沙箱中完美呈现的单文件 HTML 代码（必须使用 \`\`\`html ... \`\`\` 代码块包裹）。请利用 Tailwind CSS 工具类、Google Fonts 与 FontAwesome 图标，将用户提供的真实文案、卖点、数据指标与品牌风格有机融入精美的卡片、按钮、Hero 与布局中。在 HTML 代码块之后，可附带简明的设计语言说明与设计规范！`;
+    } else if (isPptSkill) {
+      processedSystemInstruction += `\n3. 【Web 幻灯片逐页生成规范】：请直接从第 1 页（例如 "### 01 封面与核心主张"）开始逐页展开完整的高密度事实内容与演讲者备忘录（Speaker Notes）。严禁输出全局元目录！`;
+      if (targetPageCount) {
+        processedSystemInstruction += `\n4. 【严格页面总数约束】：用户指定了页数规格为严格正好 ${targetPageCount} 页！你必须严格且仅生成正好 ${targetPageCount} 页（从第 1 页直到第 ${targetPageCount} 页），绝对不能多于或少于 ${targetPageCount} 页！`;
+      }
+    } else if (isSocialSkill) {
+      processedSystemInstruction += `\n3. 【社交卡片套图规范】：请直接从第 1 页开始逐页展开完整卡片（封面大字卡、观点证据内页、末页 CheckList 清单）。严禁输出全局元目录！`;
+      if (targetPageCount) {
+        processedSystemInstruction += `\n4. 【严格页面总数约束】：用户指定了页数规格为严格正好 ${targetPageCount} 页！你必须严格且仅生成正好 ${targetPageCount} 页（从第 1 页直到第 ${targetPageCount} 页），绝对不能多于或少于 ${targetPageCount} 页！`;
+      }
     }
 
     const fullPrompt = `请严格按照专业技能规范执行任务：
@@ -1386,27 +1550,21 @@ ${userPromptSection}
 【执行要求与质量准则】：
 1. 必须完全基于上述用户提供的真实输入文本、需求文字描述与文档附件内容（如 PRD 需求文档、研究报告、大纲材料、上传的素材图片等）进行深度提炼与高质量创作。
 2. 严禁输出与用户输入及附件无关的虚构内容，严禁输出空洞无物的泛泛套话，严禁输出“未检测到输入内容”，严禁截断句子或输出半句话。
-3. 【绝对禁止寒暄开场】：输出必须直接以第一页的 Markdown 标题（例如 "# 01 ..." 或 "### P01 ..."）开始，严禁任何“好的”、“当然”、“作为专家”等任何废话！
+3. 【绝对禁止寒暄开场】：输出直接呈现交付内容，严禁任何“好的”、“当然”、“作为专家”等废话！
 ${
-  targetPageCount
-    ? `4. 【页面数量铁律】：必须严格且仅生成正好 ${targetPageCount} 页（第 1 页到第 ${targetPageCount} 页），绝对不可生成其他页数！`
-    : ""
+  isHtmlOrWebUiSkill
+    ? `4. 【Web / UI 界面与 HTML 代码规范】：请输出高质量、生产级、自带完整视觉样式（使用 Tailwind CSS 类名或现代 CSS）的 HTML 界面代码块（使用 \`\`\`html ... \`\`\` 包裹），并在代码块后附上简明的设计规范和交互说明。确保生成的 HTML 在沙箱中直接可完整交互展示！`
+    : isPptSkill
+    ? `4. 【演示文稿 / PPT Deck 规范】：若执行 PPT/Deck 技能，请严格根据用户选择的页数（${
+        targetPageCount ? `严格正好 ${targetPageCount} 页` : "如 8/16/24 页"
+      }）以及视觉风格，逐页生成每一页的完整幻灯片内容，包含幻灯片编号与标题、核心论点、高密度事实依据与核心指标数据、演讲者模式备忘录（Speaker Notes）。`
+    : isSocialSkill
+    ? `4. 【社交卡片 / Social Card 规范】：若执行社交卡片技能，请严格按所选页数（${
+        targetPageCount ? `严格正好 ${targetPageCount} 页` : "如 4/6/8 页"
+      }）逐页输出封面大字卡、观点证据内页与末页行动清单。`
+    : `4. 【专业交付】：输出结构严谨、排版清晰的交付成果，必要时提供代码块、结构化列表或对比分析。`
 }
-5. 【演示文稿 / PPT Deck 规范】：若执行 PPT/Deck 技能，请严格根据用户选择的页数（${
-      targetPageCount ? `严格正好 ${targetPageCount} 页` : "如 8/16/24 页"
-    }）以及视觉风格，逐页生成每一页的完整幻灯片内容，包含：
-   - 幻灯片编号与标题（如 "### 01 封面与核心主张"、"### 02 核心论据与数据分析" 等）
-   - 核心论点与副标题
-   - 高密度事实依据、核心指标数据（如 "78% 行业渗透率"、"+35% 留存率" 等真实指标）、对比维度或架构流程
-   - 演讲者模式备忘录与逐字稿要点（Speaker Notes）
-6. 【社交卡片 / Social Card 规范】：若执行社交卡片技能，请严格按所选页数（${
-      targetPageCount ? `严格正好 ${targetPageCount} 页` : "如 4/6/8 页"
-    }）逐页输出：
-   - 第 1 页：封面大字卡（Hook 强力标题、副标、主视觉构想）
-   - 中间页：观点与高事实密度证据内页（论据要点、数据点、论证要点）
-   - 最后一页（第 ${targetPageCount || "N"} 页）：末页行动清单（Checklist、总结与复盘要点、互动引导）
-   - 严禁在卡片中间插入“社交卡片方案”等大纲目录标题！每一页都必须是完整的卡片设计！
-7. 必须输出完整、详尽、结构清晰的最终交付方案。`;
+5. 必须输出完整、详尽、高质量的最终交付方案。`;
 
     // Prepare contents: multimodal if images/documents exist, otherwise plain text string
     const contents: any[] = [];
